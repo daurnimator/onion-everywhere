@@ -2,6 +2,27 @@
 
 var browser = typeof browser !== "undefined" ? browser : chrome;
 
+function validate_onion_host(hostname) {
+    if (!hostname.endsWith("onion")) {
+        throw new URIError("not an onion host:" + hostname);
+    }
+
+    hostname = hostname.substring(0, hostname.length - ".onion".length);
+
+    var i = hostname.lastIndexOf(".");
+    if (i != -1) {
+        hostname = hostname.substring(i + 1);
+    }
+
+    if (hostname.length == 56) {
+        // Work on assumption it is a v3 address
+    } else if (hostname.length == 16) {
+        // Work on assumption it is a v2 address
+    } else {
+        throw new URIError("unknown onion address type");
+    }
+}
+
 function tor_redirect(details) {
     var onion_location_header = details.responseHeaders.find(function (header) {
         return header['name'].toLowerCase() == 'onion-location';
@@ -17,8 +38,10 @@ function tor_redirect(details) {
         return;
     }
 
-    if (!onion_location.hostname.endsWith("onion")) {
-        console.log("Invalid Onion-Location uri: not an onion host:", onion_location.hostname);
+    try {
+        validate_onion_host(onion_location.hostname);
+    } catch (e) {
+        console.log("Invalid Onion-Location uri:" + e.message);
         return;
     }
 
