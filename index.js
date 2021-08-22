@@ -2,6 +2,8 @@
 
 var browser = typeof browser !== "undefined" ? browser : chrome;
 
+var onion_checksum_prefix = Array.from(".onion checksum").map(letter => letter.charCodeAt(0));
+
 function validate_onion_host(hostname) {
     if (!hostname.endsWith("onion")) {
         throw new URIError("not an onion host:" + hostname);
@@ -16,6 +18,23 @@ function validate_onion_host(hostname) {
 
     if (hostname.length == 56) {
         // Work on assumption it is a v3 address
+        try {
+            hostname = base32.decode.asBytes(hostname.toUpperCase());
+        } catch (e) {
+            throw new URIError("invalid onion address:" + e.message);
+        }
+        var pubkey = hostname.slice(0, 32);
+        var checksum = hostname.slice(32, 34);
+        var version = hostname[34];
+        if (version != 3) {
+            throw new URIError("unknown onion v3 address version: " + version);
+        }
+        var calculated_checksum = sha3_256.digest(
+            onion_checksum_prefix.concat(pubkey, version)
+        ).slice(0,2);
+        if (checksum[0] != calculated_checksum[0] && checksum[1] != calculated_checksum[1]) {
+            throw new URIError("onion v3 address checksum mismatch");
+        }
     } else if (hostname.length == 16) {
         // Work on assumption it is a v2 address
     } else {
