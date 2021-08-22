@@ -1,5 +1,7 @@
 'use strict';
 
+var browser = typeof browser !== "undefined" ? browser : chrome;
+
 function tor_redirect(details) {
     var onion_location_header = details.responseHeaders.find(function (header) {
         return header['name'].toLowerCase() == 'onion-location';
@@ -14,6 +16,7 @@ function tor_redirect(details) {
         console.log("Invalid Onion-Location uri: unexpected scheme:", onion_location.protocol);
         return;
     }
+
     if (!onion_location.hostname.endsWith("onion")) {
         console.log("Invalid Onion-Location uri: not an onion host:", onion_location.hostname);
         return;
@@ -38,7 +41,7 @@ function tor_redirect(details) {
     };
 }
 
-(typeof browser !== "undefined" ? browser : chrome).webRequest.onHeadersReceived.addListener(
+browser.webRequest.onHeadersReceived.addListener(
     tor_redirect,
     { urls: ['<all_urls>'] },
     ['blocking', 'responseHeaders']
