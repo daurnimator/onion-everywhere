@@ -23,7 +23,7 @@ function validate_onion_host(hostname) {
     }
 }
 
-function tor_redirect(details) {
+async function tor_redirect(details) {
     var onion_location_header = details.responseHeaders.find(function (header) {
         return header['name'].toLowerCase() == 'onion-location';
     });
@@ -57,6 +57,9 @@ function tor_redirect(details) {
         console.log("Ignoring Onion-Location uri: already an onion host:", old_location.hostname);
         return;
     }
+
+    // Try and do DNS request...
+    await browser.dns.resolve(onion_location.hostname);
 
     console.log("Redirecting to Onion-Location: ", onion_location.href);
     return {
