@@ -11,7 +11,11 @@
         }
     },
     "background": {
-        "scripts": ["index.js"]
+        "scripts": [
+            "node_modules/hi-base32/src/base32.js",
+            "node_modules/js-sha3/src/sha3.js",
+            "index.js"
+        ]
     },
     "permissions": [
         "webRequest",
