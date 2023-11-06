@@ -69,3 +69,16 @@ browser.webRequest.onHeadersReceived.addListener(
     { urls: ['<all_urls>'] },
     ['blocking', 'responseHeaders']
 );
+
+browser.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    if (message.type === 'ONION_LOCATION_FOUND') {
+        const details = {
+            url: sender.tab.url,
+            responseHeaders: [{ name: 'Onion-Location', value: message.onionLocation }]
+        };
+        const redirect = tor_redirect(details);
+        if (redirect) {
+            browser.tabs.update(sender.tab.id, { url: redirect.redirectUrl });
+        }
+    }
+});
