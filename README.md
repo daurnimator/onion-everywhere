@@ -1,4 +1,4 @@
-A firefox/chrome extension that redirects to TOR-accessible versions of pages as advertised in [`Onion-Location` headers](https://community.torproject.org/onion-services/advanced/onion-location/).
+A firefox/chrome extension that redirects to TOR-accessible versions of pages as advertised in [`Onion-Location` headers and meta tags](https://community.torproject.org/onion-services/advanced/onion-location/).
 
 This does *not* provide good privacy guarantees; but instead:
 
