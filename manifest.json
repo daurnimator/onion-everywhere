@@ -16,6 +16,13 @@
     "permissions": [
         "webRequest",
         "webRequestBlocking",
+        "tabs",
         "<all_urls>"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"]
+        }
     ]
 }
