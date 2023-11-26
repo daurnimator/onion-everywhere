@@ -1,21 +1,23 @@
 {
-    "manifest_version": 2,
-    "name": "onion-everywhere",
-    "version": "0.0.0",
-    "description": "Automatically redirect to onion domain if it's available.",
-    "homepage_url": "https://github.com/daurnimator/onion-everywhere",
-    "applications": {
-        "gecko": {
-            "id": "onion-everywhere@daurnimator.com",
-            "strict_min_version": "45.0"
-        }
-    },
-    "background": {
-        "scripts": ["index.js"]
-    },
-    "permissions": [
-        "webRequest",
-        "webRequestBlocking",
-        "<all_urls>"
-    ]
+	"manifest_version": 2,
+	"name": "Onion Everywhere",
+	"version": "1.0",
+	"description": "Automatically redirect to onion domain if it's available.",
+	"homepage_url": "https://github.com/QuixThe2nd/onion-everywhere",
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "parsa@yazdani.au",
+			"strict_min_version": "54.0"
+		}
+	},
+	"background": {
+		"scripts": ["index.js"]
+	},
+	"permissions": ["webRequest", "webRequestBlocking", "tabs", "<all_urls>"],
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["content.js"]
+		}
+	]
 }
